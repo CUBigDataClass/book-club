@@ -3,20 +3,45 @@ import pandas as pd
 import folium
 import json
 import webbrowser
-
+import branca
 
 # create pandas dataframe with covid case/death data and FIPS info
-df = pd.read_csv('current_covid.csv', na_values=[' '])
+county_data = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'
+df = pd.read_csv(county_data, na_values=[' '])
+
+# fix FIPS code column (fips -> FIPS_Code)
+df.columns = ['date', 'county', 'state', 'FIPS_Code', 'cases', 'deaths']
+
+# fix NYC FIPS code
+df['FIPS_Code'] = df['FIPS_Code'].astype(str)
+df.loc[(df.county == 'New York City'), 'FIPS_Code']='36061.0'
 
 # convert FIPS codes to strings in order to match geojson data
 df['FIPS_Code'] = df['FIPS_Code'].astype(str)
 df = df[df.FIPS_Code != 'nan']
 df['FIPS_Code'] = df['FIPS_Code'].astype(float).astype(int).astype(str)
+df = df[df.county != 'Unknown']
+
+df['FIPS_Code'] = df['FIPS_Code'].astype(str)
+df.loc[(df.county == 'New York City'), 'FIPS_Code']='36061.0'
+df['FIPS_Code'] = df['FIPS_Code'].astype(float).astype(int).astype(str)
+
+#########################
+# add this part with front end linkage
+# set "today" as chosen date
+
+today = '2020-04-20'
+
+df = df[df.date == today]
+df['date'] = df['date'].astype(str)
+
+#########################
 
 counties = 'us-counties.json'
 
 # bins to control the color-coding
-bins = list(df['cases'].quantile([0, .2, .5, .8, 1]))
+# bins = list(df['cases'].quantile([0, .5, .75, .8, .85, .997, .998, .999, 1]))
+bins = list([0, 10, 100, 1000, 10000, 100000, 200000])
 
 m = folium.Map(location = [39.8282, -98.5795], zoom_start = 4)
 
