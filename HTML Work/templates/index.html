@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="jquery.js"></script> 
+    <script> 
+    $(function(){
+      $("#includedContent").load(map); 
+    });
+    </script>
+    <title>Book-Club HTML Test</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+
+    <h1>Book-Club HTML Test</h1>
+    
+    <div id="includedContent"></div>
+
+  </body>
+
+</html>
