@@ -2,6 +2,7 @@
 from flask import Flask, render_template
 
 # import packages
+import os
 import pandas as pd
 import folium
 import json
@@ -56,8 +57,13 @@ def root():
                     key_on = 'feature.id', fill_color = 'YlOrRd', fill_opacity = 0.7, line_opacity = 0.5,
                     legend_name = 'COVID-19 cases', bins = bins, reset = True).add_to(m)
 
-    m.save('new.html')
-    return render_template('new.html', map = m)
+    # map_path = os.path.abspath(__file__) + "\\templates"
+
+    m.save( "./static/new.html")
+
+    iframe = "/templates/new.html"
+
+    return render_template('index.html', iframe = iframe)
 
 
 if __name__ == '__main__':
