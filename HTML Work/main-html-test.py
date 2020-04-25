@@ -1,5 +1,5 @@
 #GCP Imports
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 # import packages
 import os
@@ -11,8 +11,14 @@ import branca
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods = ['POST', 'GET'])
 def root():
+
+    if request.method == 'POST':
+      result = request.form
+    else:
+        result = "0000-00-00"
+
     # create pandas dataframe with covid case/death data and FIPS info
     county_data = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'
     df = pd.read_csv(county_data, na_values=[' '])
@@ -63,7 +69,7 @@ def root():
 
     iframe = "/templates/new.html"
 
-    return render_template('index.html', iframe = iframe)
+    return render_template('index.html', iframe = iframe, result = result)
 
 
 if __name__ == '__main__':
