@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="jquery.js"></script> 
+    <script> 
+    $(function(){
+      $("#includedContent").load(map); 
+    });
+    </script>
+    <title>Book-Club HTML Test</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+
+    <h1>Book-Club HTML Test</h1>
+    
+    <iframe src = "{{ url_for('static', filename='new.html') }}" width="90%" height="600">
+      I messed up somehow... again...
+    </iframe>
+
+    <form method="POST">
+      <label for="date_picker">Date:</label>
+
+      <input type="date" id="date_picker" name="date-start"
+       value="2020-01-01"
+       min="2020-01-01" max="2020-05-01">
+
+       <p><input type = "submit" value = "submit" /></p>
+    </form>
+
+    <h2> {{result}} </h2>
+
+  </body>
+
+</html>
