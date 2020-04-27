@@ -1,13 +1,16 @@
 #GCP Imports
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 
 # import packages
-import os
 import pandas as pd
 import folium
 import json
 import webbrowser
 import branca
+
+from datetime import datetime, timedelta
+from pandas.io.json import json_normalize
+import branca.colormap as cm
 
 app = Flask(__name__)
 
@@ -15,9 +18,9 @@ app = Flask(__name__)
 def root():
 
     if request.method == 'POST':
-      result = request.form
+      result = request.form.get('selected-date')
     else:
-        result = "0000-00-00"
+        result = "2020-04-24"
 
     # create pandas dataframe with covid case/death data and FIPS info
     county_data = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'
@@ -44,7 +47,7 @@ def root():
     # add this part with front end linkage
     # set "today" as chosen date
 
-    today = '2020-04-20'
+    today = result
 
     df = df[df.date == today]
     df['date'] = df['date'].astype(str)
@@ -55,21 +58,22 @@ def root():
 
     # bins to control the color-coding
     # bins = list(df['cases'].quantile([0, .5, .75, .8, .85, .997, .998, .999, 1]))
-    bins = list([0, 10, 100, 1000, 10000, 100000, 200000])
+    max_cases = df['cases'].max()
+    bins = list([0, max_cases*.0001, max_cases*.001, max_cases*.01, max_cases*.1, max_cases])
 
     m = folium.Map(location = [39.8282, -98.5795], zoom_start = 4)
 
-    folium.Choropleth(counties, data = df, columns = ['FIPS_Code', 'cases'],
-                    key_on = 'feature.id', fill_color = 'YlOrRd', fill_opacity = 0.7, line_opacity = 0.5,
-                    legend_name = 'COVID-19 cases', bins = bins, reset = True).add_to(m)
+    choropleth = folium.Choropleth(counties, data = df, columns = ['FIPS_Code', 'cases'],
+                  key_on = 'feature.id', fill_color = "YlOrRd", fill_opacity = 0.7, line_opacity = 0.5,
+                  legend_name = 'COVID-19 cases', highlight = True, bins = bins, reset = True)
 
-    # map_path = os.path.abspath(__file__) + "\\templates"
+    choropleth.geojson.add_child(folium.features.GeoJsonTooltip(['name'], aliases = ['County:']))
+
+    choropleth.add_to(m)
 
     m.save( "./static/new.html")
 
-    iframe = "/templates/new.html"
-
-    return render_template('index.html', iframe = iframe, result = result)
+    return render_template('index.html', result = result)
 
 
 if __name__ == '__main__':
