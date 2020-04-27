@@ -1,5 +1,5 @@
 # two-devs-one-viz
-Alex Book, Jacob Reed, data visualization
+COVID-19 Data Visualization
 
 GCP Deploy Test - test deployment for GCP
 
