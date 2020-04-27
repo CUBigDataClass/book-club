@@ -20,25 +20,23 @@
     </script>
     
   </head>
-  <body onload="setInterval(refreshIframe(), 100);">
+  <body onload="setInterval(refreshIframe(), 100);" style="background-color: darkcyan;">
 
     <h1>Book-Club U.S. COVID-19 Map</h1>
     
-    <iframe src = "{{ url_for('static', filename='new.html') }}" width="90%" height="600" id="map" name="map">
-      I messed up somehow... again...
-    </iframe>
-
     <form name="selection" id="selecton" method="POST">
       <label for="date_picker">Date:</label>
 
       <input type="date" id="date_picker" name="selected-date"
-       value="2020-04-25"
+       value="2020-01-21"
        min="2020-01-20" max="2020-05-01">
 
-       <p><input type = "submit" value = "submit" /></p>
+       <p><input type = "submit" value = "Submit" /></p>
     </form>
 
-    <button onclick="refreshIframe();">Refresh Iframe</button>
+    <iframe srcdoc='{{map}}' width="90%" height="600" id="map" name="map">
+      I messed up somehow... again...
+    </iframe>
 
     <h2> Shown Date(yyyy-mm-dd): {{result}} </h2>
 

@@ -1,5 +1,9 @@
 #GCP Imports
 from flask import Flask, render_template, request, Response
+from google.cloud import storage
+
+import logging
+import os
 
 # import packages
 import pandas as pd
@@ -12,7 +16,80 @@ from datetime import datetime, timedelta
 from pandas.io.json import json_normalize
 import branca.colormap as cm
 
+
+# def upload_blob(bucket_name, source_file_name, destination_blob_name):
+#     """Uploads a file to the bucket."""
+#     # bucket_name = "your-bucket-name"
+#     # source_file_name = "local/path/to/file"
+#     # destination_blob_name = "storage-object-name"
+
+#     storage_client = storage.Client()
+#     bucket = storage_client.bucket(bucket_name)
+#     blob = bucket.blob(destination_blob_name)
+
+#     blob.upload_from_filename(source_file_name)
+
+#     print(
+#         "File {} uploaded to {}.".format(
+#             source_file_name, destination_blob_name
+#         )
+#     )
+
+# def get(self):
+#     bucket_name = os.environ.get(
+#         'BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
+
+#     self.response.headers['Content-Type'] = 'text/plain'
+#     self.response.write(
+#         'Demo GCS Application running from Version: {}\n'.format(
+#             os.environ['CURRENT_VERSION_ID']))
+#     self.response.write('Using bucket name: {}\n\n'.format(bucket_name))
+
+# def create_file(self, filename):
+#   """Create a file.
+
+#   The retry_params specified in the open call will override the default
+#   retry params for this particular file handle.
+
+#   Args:
+#     filename: filename.
+#   """
+#   self.response.write('Creating file %s\n' % filename)
+
+#   write_retry_params = gcs.RetryParams(backoff_factor=1.1)
+#   gcs_file = gcs.open(filename,
+#                       'w',
+#                       content_type='text/plain',
+#                       options={'x-goog-meta-foo': 'foo',
+#                                'x-goog-meta-bar': 'bar'},
+#                       retry_params=write_retry_params)
+#   gcs_file.write('abcde\n')
+#   gcs_file.write('f'*1024*4 + '\n')
+#   gcs_file.close()
+#   self.tmp_filenames_to_clean_up.append(filename)
+
+# def download_blob(bucket_name, source_blob_name, destination_file_name):
+#     """Downloads a blob from the bucket."""
+#     # bucket_name = "your-bucket-name"
+#     # source_blob_name = "storage-object-name"
+#     # destination_file_name = "local/path/to/file"
+
+#     storage_client = storage.Client()
+
+#     bucket = storage_client.bucket(bucket_name)
+#     blob = bucket.blob(source_blob_name)
+#     blob.download_to_filename(destination_file_name)
+
+#     print(
+#         "Blob {} downloaded to {}.".format(
+#             source_blob_name, destination_file_name
+#         )
+#     )
+
+
 app = Flask(__name__)
+
+#CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 @app.route('/', methods = ['POST', 'GET'])
 def root():
@@ -20,7 +97,7 @@ def root():
     if request.method == 'POST':
       result = request.form.get('selected-date')
     else:
-        result = "2020-04-24"
+        result = "2020-02-10"
 
     # create pandas dataframe with covid case/death data and FIPS info
     county_data = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'
@@ -71,9 +148,11 @@ def root():
 
     choropleth.add_to(m)
 
-    m.save( "./static/new.html")
+    #m.save( "./tmp/new6.html")
 
-    return render_template('index.html', result = result)
+    #upload_blob("please-work-ill-pay-you.appspot.com", "./tmp/new6.html", "new6.html")
+
+    return render_template('index.html', result = result, map=m._repr_html_())
 
 
 if __name__ == '__main__':
