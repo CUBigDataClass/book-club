@@ -1,6 +1,5 @@
 #GCP Imports
 from flask import Flask, render_template, request, Response
-from google.cloud import storage
 
 import logging
 import os
