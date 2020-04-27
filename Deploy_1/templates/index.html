@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-Equiv="Cache-Control" Content="no-cache" />
+    <meta http-Equiv="Pragma" Content="no-cache" />
+    <meta http-Equiv="Expires" Content="0" />
+    <script src="jquery.js"></script> 
+    <script> 
+    $(function(){
+      $("#includedContent").load(map); 
+    });
+    </script>
+    <title>Book-Club U.S. COVID-19 Map</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+      function refreshIframe() {
+        document.getElementById("map").contentDocument.location.reload(true);
+      }
+    </script>
+    
+  </head>
+  <body onload="setInterval(refreshIframe(), 100);" style="background-color: black;">
+
+    <h1 style="color:white;">Book-Club U.S. COVID-19 Map</h1>
+    
+    <form style="text-align: left;" name="selection" id="selecton" method="POST">
+      <label style="color:white;" for="date_picker">Date:</label>
+
+      <input type="date" id="date_picker" name="selected-date"
+       value="2020-01-21"
+       min="2020-01-20" max="2020-05-01">
+
+       <p><input style = "font-family: Georgia, 'Times New Roman', Times, serif;" type = "submit" value = "Submit" /></p>
+    </form>
+
+    <iframe srcdoc='{{map}}' width="55%" height="675" id="map" name="map">
+      I messed up somehow... again...
+    </iframe>
+
+    <h2 style="color: white;"> Shown Date(yyyy-mm-dd): {{result}} </h2>
+
+  </body>
+
+</html>
