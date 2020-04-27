@@ -100,7 +100,7 @@ def root():
         caption="COVID-19 Cases",
     )
 
-    m = folium.Map(location=[38, -97.6], zoom_start=5)
+    m = folium.Map(location=[38, -97.6], zoom_start=4)
 
     tooltip = GeoJsonTooltip(
         fields=['name', 'cases', 'deaths'],
