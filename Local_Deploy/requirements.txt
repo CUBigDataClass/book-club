@@ -6,7 +6,7 @@ folium==0.10.1
 json5==0.9.1
 branca==0.4.0
 requests==2.23.0
-numpy==1.18.3
+numpy==1.22.0
 GDAL==3.0.4
 pyshp==2.1.0
 Shapely==1.7.0
